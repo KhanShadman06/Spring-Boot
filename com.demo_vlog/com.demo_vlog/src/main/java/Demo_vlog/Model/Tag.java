@@ -8,7 +8,6 @@ import java.util.Set;
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @Column(name = "name")
@@ -18,6 +17,7 @@ public class Tag {
     private Set<BlogPost> blogPosts;
 
     // Getters and Setters
+
     public Long getId() {
         return id;
     }

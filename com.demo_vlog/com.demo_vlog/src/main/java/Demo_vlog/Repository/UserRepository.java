@@ -4,5 +4,5 @@ import Demo_vlog.Model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByEmail(String email);  // Ensure the case matches the field name in the User entity
+    User findByName(String name);  // Changed from findByUsername to findByName
 }

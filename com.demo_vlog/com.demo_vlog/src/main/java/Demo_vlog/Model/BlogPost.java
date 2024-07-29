@@ -1,7 +1,6 @@
 package Demo_vlog.Model;
 
 import jakarta.persistence.*;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -9,7 +8,6 @@ import java.util.Set;
 public class BlogPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @Column(name = "title")
@@ -18,18 +16,17 @@ public class BlogPost {
     @Column(name = "content")
     private String content;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private Date createdAt;
+    @Column(name = "user_id")
+    private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @OneToMany(mappedBy = "blogPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Comment> comments;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "blogpost_tags",
+            joinColumns = @JoinColumn(name = "blogpost_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags;
 
     // Getters and Setters
+
     public Long getId() {
         return id;
     }
@@ -54,27 +51,19 @@ public class BlogPost {
         this.content = content;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public User getUser() {
-        return user;
+    public Set<Tag> getTags() {
+        return tags;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Set<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(Set<Comment> comments) {
-        this.comments = comments;
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }
