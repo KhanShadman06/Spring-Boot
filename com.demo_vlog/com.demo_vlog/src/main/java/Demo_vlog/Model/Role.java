@@ -1,6 +1,7 @@
 package Demo_vlog.Model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Set;
 
 @Entity
@@ -8,12 +9,12 @@ import java.util.Set;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @Column(name = "name")
     private String name;
 
+    @JsonIgnoreProperties(value = {"roles"})
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 

@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getName(),
                 user.getPassword(),
                 user.isEnabled(),
-                true, true, true,  // Account non-expired, credentials non-expired, account non-locked
+                true, true, true,
                 user.getRoles().stream()
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
                         .collect(Collectors.toList())
