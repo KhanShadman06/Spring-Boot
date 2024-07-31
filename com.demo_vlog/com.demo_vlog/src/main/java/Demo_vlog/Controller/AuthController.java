@@ -6,10 +6,13 @@ import Demo_vlog.Security.JwtUtil;
 import Demo_vlog.service.CustomUserDetailsService;
 import Demo_vlog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -49,5 +52,23 @@ public class AuthController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);
         return jwt;
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin")
+    public String adminEndpoint() {
+        return "This is an admin endpoint";
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user")
+    public String userEndpoint() {
+        return "This is a user endpoint";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 }
