@@ -1,8 +1,6 @@
 package Demo_vlog.Security;
 
 import Demo_vlog.service.CustomUserDetailsService;
-import Demo_vlog.Security.JwtUtil;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,13 +8,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -27,8 +27,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
+    private static final List<Pattern> EXCLUDED_PATHS = Arrays.asList(
+            Pattern.compile("^/api/register$"),
+            Pattern.compile("^/api/authenticate$"),
+            Pattern.compile("^/api/blogposts/paginated$")
+    );
+
     @Override
-    protected void doFilterInternal( HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
         final String authorizationHeader = request.getHeader("Authorization");
@@ -55,5 +61,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         }
         chain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI().substring(request.getContextPath().length());
+        return EXCLUDED_PATHS.stream().anyMatch(pattern -> pattern.matcher(path).matches());
     }
 }

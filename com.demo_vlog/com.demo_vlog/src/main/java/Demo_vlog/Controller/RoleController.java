@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/roles")
 public class RoleController {
@@ -20,10 +22,10 @@ public class RoleController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/assign")
     public String assignRoleToUser(@RequestParam String username, @RequestParam String roleName) {
-        User user = userService.getUserByUsername(username);
+        Optional<User> user = userService.getUserByUsername(username);
         Role role = roleRepository.findByName(roleName);
-        user.getRoles().add(role);
-        userService.saveUser(user);
+        user.get().getRoles().add(role);
+        userService.saveUser(user.orElse(null));
         return "Role assigned successfully";
     }
 }

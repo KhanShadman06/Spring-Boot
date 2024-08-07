@@ -15,7 +15,7 @@ public class Author {
     private String name;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<post> posts;
+    private Set<BlogPost> blogPosts;
 
     // Getters and Setters
     public Long getId() {
@@ -34,11 +34,11 @@ public class Author {
         this.name = name;
     }
 
-    public Set<post> getPosts() {
-        return posts;
+    public Set<BlogPost> getBlogPosts() {
+        return blogPosts;
     }
 
-    public void setPosts(Set<post> posts) {
-        this.posts = posts;
+    public void setBlogPosts(Set<BlogPost> blogPosts) {
+        this.blogPosts = blogPosts;
     }
 }

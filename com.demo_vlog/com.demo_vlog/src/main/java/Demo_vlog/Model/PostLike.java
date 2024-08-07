@@ -7,16 +7,14 @@ import jakarta.persistence.*;
 public class PostLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Demo_vlog.Model.post post;
+    @JoinColumn(name = "blog_post_id")
+    private BlogPost blogPost;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id")
+    private Long userId;
 
     // Getters and Setters
     public Long getId() {
@@ -27,19 +25,19 @@ public class PostLike {
         this.id = id;
     }
 
-    public Demo_vlog.Model.post getPost() {
-        return post;
+    public BlogPost getBlogPost() {
+        return blogPost;
     }
 
-    public void setPost(Demo_vlog.Model.post post) {
-        this.post = post;
+    public void setBlogPost(BlogPost blogPost) {
+        this.blogPost = blogPost;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

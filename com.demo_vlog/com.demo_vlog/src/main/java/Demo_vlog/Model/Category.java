@@ -8,14 +8,13 @@ import java.util.Set;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<post> posts;
+    @ManyToMany(mappedBy = "categories")
+    private Set<BlogPost> blogPosts;
 
     // Getters and Setters
     public Long getId() {
@@ -34,11 +33,11 @@ public class Category {
         this.name = name;
     }
 
-    public Set<post> getPosts() {
-        return posts;
+    public Set<BlogPost> getBlogPosts() {
+        return blogPosts;
     }
 
-    public void setPosts(Set<post> posts) {
-        this.posts = posts;
+    public void setBlogPosts(Set<BlogPost> blogPosts) {
+        this.blogPosts = blogPosts;
     }
 }

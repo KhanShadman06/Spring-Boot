@@ -3,9 +3,12 @@ package Demo_vlog.Controller;
 import Demo_vlog.Model.BlogPost;
 import Demo_vlog.service.BlogPostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/blogposts")
@@ -14,23 +17,8 @@ public class BlogPostController {
     @Autowired
     private BlogPostService blogPostService;
 
-    @PostMapping
-    public BlogPost createBlogPost(@RequestBody BlogPost blogPost) {
-        return blogPostService.saveBlogPost(blogPost);
-    }
-
-    @GetMapping
-    public List<BlogPost> getAllBlogPosts() {
-        return blogPostService.getAllBlogPosts();
-    }
-
-    @GetMapping("/{id}")
-    public BlogPost getBlogPostById(@PathVariable Long id) {
-        return blogPostService.getBlogPostById(id);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteBlogPost(@PathVariable Long id) {
-        blogPostService.deleteBlogPost(id);
+    @GetMapping("/paginated")
+    public Page<BlogPost> getPaginatedPosts(@RequestParam int page, @RequestParam int size) {
+        return blogPostService.getPaginatedBlogPosts(PageRequest.of(page, size));
     }
 }
