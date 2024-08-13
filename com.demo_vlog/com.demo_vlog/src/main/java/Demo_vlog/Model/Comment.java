@@ -1,30 +1,35 @@
 package Demo_vlog.Model;
 
-import jakarta.persistence.*;
-import java.util.Date;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "comments")
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "content")
     private String content;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private Date createdAt;
-
     @ManyToOne
-    @JoinColumn(name = "blog_post_id")
+    @JoinColumn(name = "blog_post_id")  // Use @JoinColumn to specify the foreign key column
     private BlogPost blogPost;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    // Constructors
+    public Comment() {
+    }
+
+    public Comment(String content, BlogPost blogPost) {
+        this.content = content;
+        this.blogPost = blogPost;
+    }
 
     // Getters and Setters
     public Long getId() {
@@ -43,27 +48,11 @@ public class Comment {
         this.content = content;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public BlogPost getBlogPost() {
         return blogPost;
     }
 
     public void setBlogPost(BlogPost blogPost) {
         this.blogPost = blogPost;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }

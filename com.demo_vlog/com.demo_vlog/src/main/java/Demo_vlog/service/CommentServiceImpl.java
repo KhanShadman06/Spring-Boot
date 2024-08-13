@@ -8,27 +8,34 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceImpl {
 
     @Autowired
     private CommentRepository commentRepository;
 
-    @Override
-    public Comment saveComment(Comment comment) {
-        return commentRepository.save(comment);
-    }
-
-    @Override
     public List<Comment> getAllComments() {
         return commentRepository.findAll();
     }
 
-    @Override
     public Comment getCommentById(Long id) {
         return commentRepository.findById(id).orElse(null);
     }
 
-    @Override
+    public Comment createComment(Comment comment) {
+        return commentRepository.save(comment);
+    }
+
+    public Comment updateComment(Long id, Comment comment) {
+        Comment existingComment = commentRepository.findById(id).orElse(null);
+        if (existingComment != null) {
+            existingComment.setId(comment.getId());
+            existingComment.setBlogPost(comment.getBlogPost());
+            // Add any other fields that need to be updated
+            return commentRepository.save(existingComment);
+        }
+        return null;
+    }
+
     public void deleteComment(Long id) {
         commentRepository.deleteById(id);
     }

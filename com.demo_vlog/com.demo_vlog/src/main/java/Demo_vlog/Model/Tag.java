@@ -1,23 +1,33 @@
 package Demo_vlog.Model;
 
-import jakarta.persistence.*;
-import java.util.Set;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tag")
+@Table(name = "tags")
 public class Tag {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tag_id") // Specified column name for id
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "tag_name", nullable = false) // Specified column name for name
     private String name;
 
-    @ManyToMany(mappedBy = "tags")
-    private Set<BlogPost> blogPosts;
+    // Constructors
+    public Tag() {
+    }
+
+    public Tag(String name) {
+        this.name = name;
+    }
 
     // Getters and Setters
-
     public Long getId() {
         return id;
     }
@@ -32,13 +42,5 @@ public class Tag {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Set<BlogPost> getBlogPosts() {
-        return blogPosts;
-    }
-
-    public void setBlogPosts(Set<BlogPost> blogPosts) {
-        this.blogPosts = blogPosts;
     }
 }

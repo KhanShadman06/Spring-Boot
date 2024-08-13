@@ -4,39 +4,31 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "blog_post")
+@Table(name = "blog_post") // Specify the table name explicitly
 public class BlogPost {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
-    private Author author;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "blogpost_tags",
-            joinColumns = @JoinColumn(name = "blogpost_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tag> tags;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "blogpost_categories",
-            joinColumns = @JoinColumn(name = "blogpost_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<Category> categories;
-
-    @OneToMany(mappedBy = "blogPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<PostLike> postLikes;
+    @ManyToMany
+    @JoinTable(
+            name = "blog_post_category", // Specify the join table name
+            joinColumns = @JoinColumn(name = "blog_post_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories; // Use Set for ManyToMany relationship
 
     // Getters and Setters
 
@@ -64,28 +56,12 @@ public class BlogPost {
         this.content = content;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Author getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
-
-    public Set<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Set<Category> getCategories() {
@@ -94,13 +70,5 @@ public class BlogPost {
 
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
-    }
-
-    public Set<PostLike> getPostLikes() {
-        return postLikes;
-    }
-
-    public void setPostLikes(Set<PostLike> postLikes) {
-        this.postLikes = postLikes;
     }
 }

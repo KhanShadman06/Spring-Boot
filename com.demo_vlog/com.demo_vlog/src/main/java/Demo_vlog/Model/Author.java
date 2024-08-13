@@ -1,21 +1,35 @@
 package Demo_vlog.Model;
 
-import jakarta.persistence.*;
-import java.util.Set;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 
 @Entity
-@Table(name = "author")
+@Table(name = "authors")
 public class Author {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id")  // Specify the column name for the primary key
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)  // Specify the column name and make it non-nullable
     private String name;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<BlogPost> blogPosts;
+    @Column(name = "bio", columnDefinition = "TEXT")  // Specify the column name and define the column type
+    private String bio;
+
+    // Constructors
+    public Author() {
+    }
+
+    public Author(String name, String bio) {
+        this.name = name;
+        this.bio = bio;
+    }
 
     // Getters and Setters
     public Long getId() {
@@ -34,11 +48,11 @@ public class Author {
         this.name = name;
     }
 
-    public Set<BlogPost> getBlogPosts() {
-        return blogPosts;
+    public String getBio() {
+        return bio;
     }
 
-    public void setBlogPosts(Set<BlogPost> blogPosts) {
-        this.blogPosts = blogPosts;
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }

@@ -8,32 +8,33 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl {
 
     @Autowired
     private RoleRepository roleRepository;
 
-    @Override
-    public Role saveRole(Role role) {
-        return roleRepository.save(role);
-    }
-
-    @Override
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
     }
 
-    @Override
     public Role getRoleById(Long id) {
         return roleRepository.findById(id).orElse(null);
     }
 
-    @Override
-    public Role updateRole(Role role) {
+    public Role createRole(Role role) {
         return roleRepository.save(role);
     }
 
-    @Override
+    public Role updateRole(Long id, Role role) {
+        Role existingRole = roleRepository.findById(id).orElse(null);
+        if (existingRole != null) {
+            existingRole.setName(role.getName());
+            // Add any other fields that need to be updated
+            return roleRepository.save(existingRole);
+        }
+        return null;
+    }
+
     public void deleteRole(Long id) {
         roleRepository.deleteById(id);
     }

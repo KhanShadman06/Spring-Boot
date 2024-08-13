@@ -1,9 +1,9 @@
 package Demo_vlog.Controller;
 
 import Demo_vlog.Model.Comment;
-import Demo_vlog.service.CommentService;
+import Demo_vlog.service.CommentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,27 +13,35 @@ import java.util.List;
 public class CommentController {
 
     @Autowired
-    private CommentService commentService;
+    private CommentServiceImpl commentService;
 
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @PostMapping
-    public Comment createComment(@RequestBody Comment comment) {
-        return commentService.saveComment(comment);
-    }
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping
-    public List<Comment> getAllComments() {
-        return commentService.getAllComments();
+    public ResponseEntity<List<Comment>> getAllComments() {
+        List<Comment> comments = commentService.getAllComments();
+        return ResponseEntity.ok(comments);
     }
 
     @GetMapping("/{id}")
-    public Comment getCommentById(@PathVariable Long id) {
-        return commentService.getCommentById(id);
+    public ResponseEntity<Comment> getCommentById(@PathVariable Long id) {
+        Comment comment = commentService.getCommentById(id);
+        return ResponseEntity.ok(comment);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping
+    public ResponseEntity<Comment> createComment(@RequestBody Comment comment) {
+        Comment createdComment = commentService.createComment(comment);
+        return ResponseEntity.ok(createdComment);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody Comment comment) {
+        Comment updatedComment = commentService.updateComment(id, comment);
+        return ResponseEntity.ok(updatedComment);
+    }
+
     @DeleteMapping("/{id}")
-    public void deleteComment(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
+        return ResponseEntity.noContent().build();
     }
 }

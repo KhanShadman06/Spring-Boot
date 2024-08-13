@@ -8,27 +8,33 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PostLikeServiceImpl implements PostLikeService {
+public class PostLikeServiceImpl {
 
     @Autowired
     private PostLikeRepository postLikeRepository;
 
-    @Override
-    public PostLike savePostLike(PostLike postLike) {
-        return postLikeRepository.save(postLike);
-    }
-
-    @Override
     public List<PostLike> getAllPostLikes() {
         return postLikeRepository.findAll();
     }
 
-    @Override
     public PostLike getPostLikeById(Long id) {
         return postLikeRepository.findById(id).orElse(null);
     }
 
-    @Override
+    public PostLike createPostLike(PostLike postLike) {
+        return postLikeRepository.save(postLike);
+    }
+
+    public PostLike updatePostLike(Long id, PostLike postLike) {
+        PostLike existingPostLike = postLikeRepository.findById(id).orElse(null);
+        if (existingPostLike != null) {
+            existingPostLike.setId(postLike.getId());
+            existingPostLike.setUser(postLike.getUser());
+            return postLikeRepository.save(existingPostLike);
+        }
+        return null;
+    }
+
     public void deletePostLike(Long id) {
         postLikeRepository.deleteById(id);
     }

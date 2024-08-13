@@ -1,37 +1,47 @@
 package Demo_vlog.Controller;
 
 import Demo_vlog.Model.PostLike;
-import Demo_vlog.service.PostLikeService;
+import Demo_vlog.service.PostLikeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/post likes")
+@RequestMapping("/api/post-likes")
 public class PostLikeController {
 
     @Autowired
-    private PostLikeService postLikeService;
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @PostMapping
-    public PostLike createPostLike(@RequestBody PostLike postLike) {
-        return postLikeService.savePostLike(postLike);
-    }
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    private PostLikeServiceImpl postLikeService;
+
     @GetMapping
-    public List<PostLike> getAllPostLikes() {
-        return postLikeService.getAllPostLikes();
+    public ResponseEntity<List<PostLike>> getAllPostLikes() {
+        List<PostLike> postLikes = postLikeService.getAllPostLikes();
+        return ResponseEntity.ok(postLikes);
     }
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+
     @GetMapping("/{id}")
-    public PostLike getPostLikeById(@PathVariable Long id) {
-        return postLikeService.getPostLikeById(id);
+    public ResponseEntity<PostLike> getPostLikeById(@PathVariable Long id) {
+        PostLike postLike = postLikeService.getPostLikeById(id);
+        return ResponseEntity.ok(postLike);
     }
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+
+    @PostMapping
+    public ResponseEntity<PostLike> createPostLike(@RequestBody PostLike postLike) {
+        PostLike createdPostLike = postLikeService.createPostLike(postLike);
+        return ResponseEntity.ok(createdPostLike);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PostLike> updatePostLike(@PathVariable Long id, @RequestBody PostLike postLike) {
+        PostLike updatedPostLike = postLikeService.updatePostLike(id, postLike);
+        return ResponseEntity.ok(updatedPostLike);
+    }
+
     @DeleteMapping("/{id}")
-    public void deletePostLike(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePostLike(@PathVariable Long id) {
         postLikeService.deletePostLike(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -8,27 +8,33 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class TagServiceImpl implements TagService {
+public class TagServiceImpl {
 
     @Autowired
     private TagRepository tagRepository;
 
-    @Override
-    public Tag saveTag(Tag tag) {
-        return tagRepository.save(tag);
-    }
-
-    @Override
     public List<Tag> getAllTags() {
         return tagRepository.findAll();
     }
 
-    @Override
     public Tag getTagById(Long id) {
         return tagRepository.findById(id).orElse(null);
     }
 
-    @Override
+    public Tag createTag(Tag tag) {
+        return tagRepository.save(tag);
+    }
+
+    public Tag updateTag(Long id, Tag tag) {
+        Tag existingTag = tagRepository.findById(id).orElse(null);
+        if (existingTag != null) {
+            existingTag.setName(tag.getName());
+            // Add any other fields that need to be updated
+            return tagRepository.save(existingTag);
+        }
+        return null;
+    }
+
     public void deleteTag(Long id) {
         tagRepository.deleteById(id);
     }

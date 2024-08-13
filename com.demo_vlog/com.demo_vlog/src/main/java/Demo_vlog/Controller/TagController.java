@@ -1,9 +1,9 @@
 package Demo_vlog.Controller;
 
 import Demo_vlog.Model.Tag;
-import Demo_vlog.service.TagService;
+import Demo_vlog.service.TagServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,25 +13,35 @@ import java.util.List;
 public class TagController {
 
     @Autowired
-    private TagService tagService;
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @PostMapping
-    public Tag createTag(@RequestBody Tag tag) {
-        return tagService.saveTag(tag);
-    }
+    private TagServiceImpl tagService;
 
     @GetMapping
-    public List<Tag> getAllTags() {
-        return tagService.getAllTags();
+    public ResponseEntity<List<Tag>> getAllTags() {
+        List<Tag> tags = tagService.getAllTags();
+        return ResponseEntity.ok(tags);
     }
 
     @GetMapping("/{id}")
-    public Tag getTagById(@PathVariable Long id) {
-        return tagService.getTagById(id);
+    public ResponseEntity<Tag> getTagById(@PathVariable Long id) {
+        Tag tag = tagService.getTagById(id);
+        return ResponseEntity.ok(tag);
     }
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+
+    @PostMapping
+    public ResponseEntity<Tag> createTag(@RequestBody Tag tag) {
+        Tag createdTag = tagService.createTag(tag);
+        return ResponseEntity.ok(createdTag);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody Tag tag) {
+        Tag updatedTag = tagService.updateTag(id, tag);
+        return ResponseEntity.ok(updatedTag);
+    }
+
     @DeleteMapping("/{id}")
-    public void deleteTag(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
         tagService.deleteTag(id);
+        return ResponseEntity.noContent().build();
     }
 }
